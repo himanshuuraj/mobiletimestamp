@@ -1,0 +1,150 @@
+/* Empty. Add your own CSS if you like */
+.item-select select {
+    -moz-appearance: none;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    padding: 0px 45px 0px 0px;
+    max-width: 100%;
+    border: medium none;
+    background: #FFF none repeat scroll 0% 0%;
+    color: #333;
+    text-indent: 0.01px;
+    text-overflow: "";
+    white-space: nowrap;
+    font-size: 14px;
+    cursor: pointer;
+    direction: rtl;
+}
+
+.icontoaddnewevent{
+    position:fixed;
+    right:0px;
+}
+
+.cover{
+    display: block;
+    position: relative;
+    height:150px;
+    background-color: red;
+}
+
+.followersandfollowing{
+    display: block;
+    position: relative;
+    height:80px;
+    background-color: red;
+}
+
+.event{
+    display:block;
+    position:relative;
+    height:45px;
+    width:auto;
+    background-color: blue;
+}
+
+.eventelement{
+    display:inline-block;
+    width:100px;
+    height:45px;
+    background-color: white;
+    text-align:center;
+}
+
+.events {
+  overflow: scroll;
+  white-space: nowrap;
+}
+.yeardiv{
+    display:block;
+    position:relative;
+    height:30px;
+    background-color: #778899;
+    color:white;
+    text-align: center;
+    width:100%;
+}
+.precisedetail{
+    display:block;
+    position:relative;
+    height: 85px;
+   
+    width:100%;
+}
+
+.button.button-block, .button.button-full{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.button.icon-left:before{
+    float:none;
+}
+
+.fulldetails{
+    position:relative;
+    display:block;
+    background-color: gray;
+    width:100%;
+    overflow-y: scroll;
+}
+
+.precisedetailupperdiv{
+    display:block;
+    position:relative;
+    height: 35px;
+    background-color: #778899;
+    width:100%;
+    text-align: center;
+}
+
+.precisedetaillowerdiv{
+    display:block;
+    position:relative;
+    
+    background-color: #778899;
+    width:100%;
+}
+
+.dropdownbutton{
+    position:absolute;
+    height:100%;
+    width:100%;
+    left:0;
+    top: 0;
+    background-color: #778899;
+}
+
+.about {
+  background-color: #DBEDED;
+  border-radius: 5px;
+  box-shadow: 0 0 6px #B2B2B2;
+  display: block;
+  position: relative;
+  border-color: #DBEDED;
+  width: auto;
+  border-style: double;
+  margin-top: 10px;
+  text-align: center;
+  padding-left:10px;
+  padding-right:10px;
+}
+
+.images{
+    position:relative;
+    display:block;
+    height:160px;
+    width:100%;
+    background-color: red;
+}
+
+.card{
+    text-align: center;
+}
+
+.box1, box2, box3 {
+   height: 250px;
+   border: 2px solid blue;
+}

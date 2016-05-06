@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="cordova.js"></script>
+    <script src="js/openfb.js"></script>
+    <script src="js/app.js"></script>
+  </head>
+  <body ng-app="starter" ng-controller="loginctrl" ng-init="load()">
+
+    <ion-pane>
+      <ion-header-bar class="bar-stable">
+        <h1 class="title">FlashBacks</h1>
+      </ion-header-bar>
+      <ion-content ng-show="mainpart == 'login'">
+          <div class="padding" style="margin-top:30%;">
+            <button class="button button-block" ng-click="loginusingfb()">Login with Facebook</button>
+            <button class="button button-block" ng-click="changemainpart('loginusingtimestamp')">Login using timestamp</button>
+<!--            <button ng-click="getfriendlist();"></button>-->
+          </div>
+          <div class="padding" style="text-align:center;">
+              New to timestamp <span ng-click = "changemainpart('signup')"><u>Sign Up</u></span>
+          </div>
+      </ion-content>
+        
+      <ion-content ng-show="mainpart == 'getuniqueusername'">
+          
+          <div class="list padding" style="margin-top:20%;">
+            <div id="usernamenotification"></div>
+            <label class="item item-input">
+                <input type="text" placeholder="username" id="username" ng-keyup="checkusername()">
+            </label>
+          </div>
+          <button class="button button-block" ng-click="setupusernameandlogin()">Setup username</button>
+      </ion-content>
+        
+      <ion-content ng-show="mainpart == 'loginusingtimestamp'">
+          <div class="list padding" style="margin-top:20%;">
+            <label class="item item-input">
+            <input type="text" placeholder="username">
+            </label>
+            <label class="item item-input">
+            <input type="password" placeholder="password">
+            </label>
+            <button class="button button-block">Login</button>
+         </div>
+      </ion-content>
+        
+      <ion-content ng-show="mainpart == 'signup'">
+          <div class="padding" style="margin-top:30%;">
+            <button class="button button-block" ng-click="loginusingfb()">Signup using Facebook</button>
+            <button class="button button-block" ng-click="changemainpart('signupusingtimestamp')">Signup using timestamp</button>
+          </div>
+      </ion-content>
+        
+      <ion-content ng-show="mainpart == 'signupusingtimestamp'">
+          <div class="list padding" style="margin-top:15%;">
+            <label class="item item-input">
+            <input type="text" placeholder="Name">
+            </label>
+            <label class="item item-input">
+            <input type="text" placeholder="Username">
+            </label>
+            <label class="item item-input">
+            <input type="password" placeholder="Password">
+            </label>
+            <label class="item item-input">
+            <input type="text" placeholder="Email">
+            </label>
+            <label class="item item-input">
+            <input type="text" placeholder="Phone Number">
+            </label>
+             <div class="row">
+                 <div class="col" style="text-align:center;">
+                     DOB
+                 </div>
+                 <div class="col">
+                     <div class="item item-select">
+                        <select id="day">
+                            <option selected>Day</option>
+                        </select>
+                     </div>
+                 </div>
+                <div class="col">
+                    <div class="item item-select">
+                        <select id="month">
+                             <option selected>Month</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="item item-select">
+                        <select id="year">
+                             <option selected>Year</option>
+                         </select>
+                    </div>
+                </div>
+            </div>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Gender
+                </div>
+                <select>
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+            </label>
+            <button class="button button-block">Sign up</button>
+         </div>
+      </ion-content>
+    </ion-pane>
+  </body>
+</html>

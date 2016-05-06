@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1.0,minimum-scale=1.0, user-scalable=no">
+        <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <link href="css/style.css" rel="stylesheet">
+        <script src="lib/ionic/js/ionic.bundle.js"></script>
+        <script src='js/angular-touch.js' ></script>
+        <script src='js/angular-swipe.js' ></script>
+        <script src="cordova.js"></script>
+        <script src="js/openfb.js"></script>
+        <script src="js/eventctrl.js"></script>
+    </head>
+    <body ng-app="eventapp" ng-controller="eventctrl" ng-init="load()" ng-click="closepopup()">
+       
+    <ion-pane ng-show="showpage == 'mainpage'">
+      <ion-header-bar class="bar-stable">
+        <div class="buttons">
+        </div>
+        <h1 class="title">fLASHBACk</h1>
+        <div class="buttons">
+            <button class="button" ng-click="logout()">Logout</button>
+        </div>
+      </ion-header-bar>
+      <ion-content>
+          <div class="row">
+              <div class="col-90">
+                <ion-scroll direction="x" class="events">
+                  <div class="eventelement" ng-repeat="eventname in eventnamearray track by $index" id="{{eventname}}id" ng-click="showevent(eventname)">{{eventname}}</div>
+                </ion-scroll>
+              </div>
+              <div class="col-10">
+                <button class="button icon icon-left ion-android-add-circle icontoaddnewevent" ng-click="addneweventtype()"></button>
+              </div>
+          </div>
+          <div class="padding" style="height:auto;">
+             <div class="padding-bottom"><center>{{username}}'s FlashBacks</center></div>
+             <div class="" ng-repeat="event in eventdescription | orderBy : '-date'">
+<!--                <div class="yeardiv" ng-show="showyear($index)">2000</div>-->
+                <div class="precisedetail">
+                    <div class="precisedetailupperdiv">
+                        <div class="row">
+                            <b>{{event.name}}</b>
+                        </div>
+                    </div>
+                    <div class="precisedetaillowerdiv">
+                        <div class="row">
+                            <div class="col col-90">
+                                {{event.date}}
+                            </div>
+                            <div class="col col-10" ng-click="showfulldetails(event._id,event.photo)">
+                                <span class="icon ion-chevron-down"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fulldetails" id="{{event._id}}" style="height:0px;">
+                    <div class="card">
+                        <b>Memories</b>
+                        <div class="card" style="height:80px;background-color: white;width:95%;">{{event.memories}}</div>
+                    </div>
+
+                    <div class="card" ng-show="showreview()">
+                        <b> Review </b>
+                        <div type="text" class="card" style="height:40px;background-color: white;width:95%;">{{event.review}}</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="row">
+                            <div class="col col-40" ng-show="showrate()">
+                               Rate:- {{event.rate}}/10
+                            </div>
+                            <div class="col col-60">
+                                 friends
+                                <select>
+                                    <option ng-repeat="friend in event.tags track by $index">{{friend.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" >
+                        <ion-slide-box>
+                            <ion-slide ng-repeat="photo in event.photo track by $index">
+                                <img ng-src="{{photo}}" on-double-tap="showimageinlargerview(photo)" style="height:150px;margin:auto;display:block" >
+                            </ion-slide>
+                        </ion-slide-box>
+                    </div>
+
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-20">
+                                <button ng-click="deleteevent(event._id)" style="width:100%;">Delete</button>
+                            </div>
+                            <div class="col-20">
+                                <button ng-click="showpagetoupdateevent(event._id,event)" style="width:100%;">Update</button>
+                            </div>
+                            <div class="col-20">
+                                <label for="file"> 
+                                    <span class="icon ion-images" style="font-size: larger;"></span>
+                                    <input type="file" file-model="myFile" id="file" style="display:none;" name="file" multiple accept= "image/*"
+                                        onchange="angular.element(this).scope().getFileDetails(this)"/>
+                                </label>
+                            </div>
+                            <div class="col-33">
+                                <button ng-click="uploadmorephotos(event._id,$index)" style="width:100%;">upload more photo</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+             </div>
+          </div>
+<!--          <button ng-click="share()">Share</button>
+          <input type="text" id="Message"/>
+          <button ng-click="sharemultiplephotosonfacebook()">share multiple photo on fb</button>
+              <button ng-click="sharesinglephotoonfacebook()">share single photo on fb</button>
+              <button ng-click="createnewalbum('thenewone')">new album</button>-->
+      </ion-content>
+      <ion-footer-bar class="bar-assertive" ng-show="showfooter">
+              <div class="buttons">
+                  <button class="button" id="footerbutton" ng-click="showaddeventpage()">Add</button>
+              </div>
+      </ion-footer-bar>
+    </ion-pane>
+       
+    <ion-pane ng-show="showpage == 'showeventaddingpage'">
+        <ion-header-bar class="bar-stable">
+            <div class="buttons">
+                <button class="button icon-left ion-home" ng-click="showpage = 'mainpage'">Home</button>
+            </div>
+            <h1 class="title">add {{eventname}}</h1>
+            <div class="buttons">
+            <button ng-click='logout()'>Logout</button>
+            </div>
+        </ion-header-bar>
+        <ion-content>
+            <div class="list">
+                <label class="item item-input">
+                    <input type="text" ng-model="datatoaddevent.name" id="nametextbox" ng-keyup="getnamesuggestion()" style="width:100%;" placeholder="Name"/>
+                </label>
+                    <div ng-repeat="eventname in eventnamesuggestion track by $index">
+                        <div class="row" ng-click="setnameintextbox(eventname.name)">
+                            {{eventname.name}}
+                        </div>
+                    </div>
+                <label class="item item-input">
+                    <input type="text" ng-model="datatoaddevent.tags" id="friendtextbox" ng-keyup="getfriendsuggestion()" placeholder="friends"/>
+                </label>
+                    <div ng-repeat="friend in friendsuggestion track by $index" ng-click="setfriendintextbox(friend.name,friend.username)">
+                        <div class="row">
+                            <div class="col-20">
+                                <img ng-src="{{friend.photo}}" style="width:100%;height:40px;"/>
+                            </div>
+                            <div class="col-40">
+                                {{friend.name}}<br>
+                                {{friend.username}}
+                            </div>
+                        </div>
+                    </div>
+                <label class="item item-input">
+                    <input type="text" ng-model="datatoaddevent.memories" placeholder="Memories"/>
+                </label>
+                <label class="item item-input">
+                    <input id="date" type="text" onfocus="(this.type='date')" placeholder="date"/>
+                </label>
+                <label class="item item-input">
+                    <input type="text" ng-model="datatoaddevent.place" placeholder="place"/>
+                </label>
+                <label class="item item-input" ng-show="showtheatre()">
+                    <input type="text" ng-model="datatoaddevent.theatre" placeholder="theatre"/>
+                </label>
+                <label class="item item-input" ng-show="showreview()">
+                    <input type="text" ng-model="datatoaddevent.review" placeholder="review(optional)"/>
+                </label>
+                <div class="row">
+                    <div class="col padding-top" style="text-align: center;">
+                        Share memory on fb
+                    </div>
+                    <div class="col">
+                        <div class="row" style="padding: 0 0 0 0;">
+                            <div class="col">
+                                <button style="align:right;">No</button>
+                            </div>
+                            <div class="col">
+                                <button ng-click="">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="col-25" style="text-align: center;">
+                            Rate
+                        </div>
+                        <div class="col-50">
+                            <input type="range" min="0" max="10" ng-model="datatoaddevent.rate" style="width: 100%;"/>
+                        </div>
+                        <div class="col-25" style="text-align: center;">
+                            {{datatoaddevent.rate}}
+                        </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="text-align:center;">
+                        Upload image
+                    </div>
+    <!--                <div class="col">
+                        <button class="icon ion-ios-reverse-camera" ng-click="takePicture()"</button>
+                    </div>-->
+    <!--                <div class="col">
+                        <button class="icon ion-image" ng-click="getPicture()"</button>
+                    </div>-->
+                    <div class="col">
+                        <div class="row" style="padding: 0 0 0 0;">
+                            <div class="col-25">
+                                <label for="file">
+                                    <span class="icon ion-images"></span>
+<!--                                    <img src="img/fileupload.png">-->
+<input type="file" file-model="myFile" id="file" style="display: none;" name="file" multiple
+                                            onchange="angular.element(this).scope().getFileDetails(this)"/>
+                                </label>
+                            </div>
+                            <div class="col-75">
+                                <button ng-click="uploadFile()">upload me</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--            <div>{{user.picture}}</div>-->
+        </ion-content>
+        <ion-footer-bar class="bar-assertive">
+              <div class="buttons">
+                  <button class="button" ng-click="addevent()">Add</button>
+              </div>
+        </ion-footer-bar>
+    </ion-pane>
+      
+    <ion-pane ng-show="showpage == 'showeventupdatingpage'">
+        <ion-header-bar class="bar-stable">
+            <div class="buttons">
+                <button class="button icon-left ion-home" ng-click="showpage = 'mainpage'">Home</button>
+            </div>
+            <h1 class="title">Add {{eventname}}</h1>
+            <div class="buttons">
+                <button ng-click='logout()'>Logout</button>
+            </div>
+        </ion-header-bar>
+        <ion-content>
+            <div class="list">
+                <label class="item item-input">
+                    <input type="text" ng-model="datatoaddevent.name" name="name" class="padding" placeholder="Name"/>
+                </label>
+                <label class="item item-input">
+                    <input type="text" ng-model="datatoaddevent.tags" id="friendtextbox" ng-keyup="getfriendsuggestion()" placeholder="friends"/>
+                </label>
+                <div ng-repeat="friend in friendsuggestion track by $index" ng-click="setfriendintextbox(friend.name)">
+                    <img ng-src="{{friend.photo}}" style="width:100%;height:40px;"/>
+                    {{friend.name}}<br>
+                    {{friend.username}}
+                </div>
+                <label class="item item-input">
+                    <input type="text" ng-model="datatoaddevent.memories" placeholder="Memories"/>
+                </label>
+                <label class="item item-input">
+                    <input type="date" id="datewhileupdating" placeholder="date"/>
+                </label>
+                <label class="item item-input">
+                    <input type="text" ng-model="datatoaddevent.place" placeholder="place"/>
+                </label>
+                    <input type="text" ng-model="datatoaddevent.opentofriend" placeholder="Shareitonfb"/>
+                <label class="item item-input" ng-show="showtheatre()">
+                    <input type="text" ng-model="datatoaddevent.theatre" placeholder="theatre"/>
+                </label>
+                <label class="item item-input" ng-show="showreview()">
+                    <input type="text" ng-model="datatoaddevent.review" placeholder="review(optional)"/>
+                </label>
+                <div class="row" ng-show="showrate()">
+                    <div class="col-25">
+                        Rate
+                    </div>
+                    <div class="col-50">
+                        <input type="range" min="0" max="10" ng-model="datatoaddevent.rate"/>
+                    </div>
+                    <div class="col-20">
+                       {{datatoaddevent.rate}}
+                    </div>
+                </div>
+            </div>
+        </ion-content>
+        <ion-footer-bar class="bar-assertive">
+              <div class="buttons">
+                  <button class="button" ng-click="updateevent()">Update</button>
+              </div>
+        </ion-footer-bar>
+    </ion-pane>
+
+    <ion-pane ng-show="showpage == 'showneweventaddingpage'">
+      <ion-header-bar class="bar-stable">
+        <div class="buttons">
+            <button class="button icon-left ion-home" ng-click="showpage = 'mainpage'">Home</button>
+        </div>
+        <h1 class="title">Add new event</h1>
+        <div class="buttons">
+            <button ng-click='logout()'>Logout</button>
+        </div>
+      </ion-header-bar>
+      <ion-content>
+          <div class="card">
+              <input type="text" ng-model="eventname" id="newevent" placeholder="Enter new event"/>
+              <button ng-click="addneweventinneweventtype()">Add</button>
+          </div>
+      </ion-content>
+    </ion-pane>    
+    
+    <script id = "shareonfb.html" type = "text/ng-template">
+        <ion-modal-view>
+           <ion-header-bar>
+              <h1 class = "title">Share via timestamp</h1>
+           </ion-header-bar>
+
+           <ion-content>
+              <center>Memories</center>
+              <div class="card">
+                <input type="text" ng-model="datatoaddevent.memories"/>
+              </div>
+              <br>
+              <div class="padding">
+                <input type="radio" value="chicken" ng-model="issharephotoonfb"/>
+                Do you want to share photo too
+              </div>
+              <button class = "button"
+                 ng-click = "share()">Close Modal</button>
+           </ion-content>
+   
+           <ion-footer-bar>
+              <button class = "button icon icon-left ion-ios-close-outline"
+                 ng-click = "closeModal()">Close Modal</button>
+           </ion-footer-bar>
+        </ion-modal-view>
+    </script>
+    
+    <script id = "showimage.html" type = "text/ng-template">
+        <div>
+            <ion-slide-box>
+                <ion-slide ng-repeat="photo in photosofselectedevent">
+                    <img ng-src="{{photo}}" style="height:100%;width:100%;" >
+                </ion-slide>
+            </ion-slide-box>
+        </div>
+    </script>
+    </body>
+</html>
